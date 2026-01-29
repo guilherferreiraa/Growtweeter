@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnTema = document.getElementById('theme-toggle');
     
     let user = JSON.parse(localStorage.getItem('user')) || { id: 'b5a6914f-6c3d-4b1f-bb1f-0a316362e2ed', username: 'Guilherme' };
-    const API_URL = 'https://growtweet.vercel.app'; 
+    const API_URL = 'https://growtweet.vercel.app/api'; 
     let feed = [];
 
     const aplicarTema = (tema) => {
