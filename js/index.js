@@ -4,9 +4,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnTweetar = document.getElementById('btn-tweetar');
     const btnTema = document.getElementById('theme-toggle');
 
-    let user = JSON.parse(localStorage.getItem('user')) || { id: 'a248c7da-f067-4d3b-898e-5c3f6537637b', username: 'Guilherme' };
     const API_URL = 'https://growtweet.vercel.app';
     let feed = [];
+    let user = { id: '', username: 'Guilherme' };
+
+    async function sincronizarUsuario() {
+        try {
+            const res = await fetch(`${API_URL}/user`);
+            const usuarios = await res.json();
+            
+            if (usuarios && usuarios.length > 0) {
+                user.id = usuarios[0].id;
+                user.username = usuarios[0].username || "Guilherme";
+                localStorage.setItem('user', JSON.stringify(user));
+                console.log("✅ Usuário sincronizado com o banco:", user.id);
+            }
+        } catch (e) {
+            console.error("❌ Erro ao buscar usuário do banco, tentando localStorage...");
+            user = JSON.parse(localStorage.getItem('user')) || user;
+        }
+        carregarTweets();
+    }
     const aplicarTema = (tema) => {
         if (tema === 'dark') {
             document.documentElement.classList.add('dark-mode');
@@ -37,10 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 foto: "/assets/fotoDePerfil.jpg",
                 likes: t.likes ? t.likes.length : 0,
                 euCurti: t.likes ? t.likes.some(l => l.userId === user.id) : false,
-                comments: t._count ? t._count.comments : 0, 
+                comments: 0, 
                 podeExcluir: t.userId === user.id
             }));
-
             feed = [...feedDaAPI, ...feedPadrao];
             renderizarFeed();
         } catch (e) {
@@ -65,21 +82,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId: user.id, tweetId: tweetId })
             });
-            
-            if (res.ok) {
-                await carregarTweets(); 
-            }
+            if (res.ok) await carregarTweets(); 
         } catch (error) {
-            console.error("Erro ao processar curtida");
+            console.error("Erro ao curtir");
         }
     };
-    window.comentar = () => {
-        alert("Funcionalidade de comentários disponível via API (Postman).");
-    };
+
+    // --- TWEETAR ---
     if (btnTweetar) {
         btnTweetar.onclick = async () => {
             const texto = inputTweet.value.trim();
-            if (!texto) return;
+            if (!texto || !user.id) {
+                alert("Aguarde a sincronização do usuário ou crie um usuário no Postman.");
+                return;
+            }
             try {
                 const res = await fetch(`${API_URL}/tweet`, {
                     method: 'POST',
@@ -93,11 +109,13 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (e) { console.error("Erro ao postar"); }
         };
     }
+
     const feedPadrao = [
         { id: '1', nome: "Blumhouse", arroba: "blumhouse", texto: "The future of FNAF is bright!", foto: "/assets/Blumhouse-logo.jpg", likes: 85400, euCurti: false, comments: 1200 },
         { id: '2', nome: "GrowDev", arroba: "growdevers", texto: "Vamos codar hoje?", foto: "/assets/growdev.png", likes: 1200, euCurti: false, comments: 45 },
         { id: '3', nome: "Dexter Moser", arroba: "michaelC.Hall", texto: "Open your eyes and look at what you did!", foto: "/assets/Michael C. Hall.jpg", likes: 1200, euCurti: false, comments: 45 }
     ];
+
     function renderizarFeed() {
         if (!timeline) return;
         timeline.innerHTML = feed.map(t => `
@@ -110,12 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button onclick="curtir('${t.id}')" class="btn-action" style="color: ${t.euCurti ? '#f4212e' : 'inherit'}">
                             ${t.euCurti ? '❤️' : '🤍'} <span>${t.likes}</span>
                         </button>
-                        <button onclick="comentar()" class="btn-action">
+                        <button onclick="alert('Comentários via Postman')" class="btn-action">
                             💬 <span>${t.comments}</span>
                         </button>
                     </div>
                 </div>
             </div>`).join('');
     }
-    carregarTweets();
+
+    // INICIALIZAÇÃO
+    sincronizarUsuario();
 });
