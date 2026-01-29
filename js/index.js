@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnTweetar = document.getElementById('btn-tweetar');
     const btnTema = document.getElementById('theme-toggle');
     
-    let user = JSON.parse(localStorage.getItem('user')) || { id: 'b5a6914f-6c3d-4b1f-bb1f-0a316362e2ed', username: 'Guilherme' };
+    let user = JSON.parse(localStorage.getItem('user')) || { id: 'a248c7da-f067-4d3b-898e-5c3f6537637b', username: 'Guilherme' };
     const API_URL = 'https://growtweet.vercel.app'; 
     let feed = [];
 
@@ -27,12 +27,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     aplicarTema(localStorage.getItem('theme') || 'light');
 
+
     async function carregarTweets() {
         try {
             const res = await fetch(`${API_URL}/tweet`);
-            
-            if (!res.ok) throw new Error("Erro ao buscar dados do servidor");
-            
             const tweetsBanco = await res.json();
 
             const feedDaAPI = tweetsBanco.map(t => {
@@ -80,13 +78,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
-                alert("Comentário enviado! 🚀");
-                await carregarTweets();
+                alert("Comentário enviado com sucesso! ✅");
+                await carregarTweets(); 
             } else {
                 alert("Erro ao enviar comentário no servidor.");
             }
         } catch (error) {
             console.error("Erro na comunicação:", error);
+            alert("Erro de conexão com o servidor.");
         }
     };
 
@@ -118,6 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             processandoLike = false; 
         }
     };
+
     if (btnTweetar) {
         btnTweetar.onclick = async () => {
             const texto = inputTweet.value.trim();
@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+
     window.excluirTweet = async (id) => {
         if (!confirm("Deseja apagar este tweet permanentemente?")) return;
         try {
@@ -153,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedPadrao = [
         { id: '1', nome: "Blumhouse", arroba: "blumhouse", texto: "The future of FNAF is bright!", foto: "/assets/Blumhouse-logo.jpg", likes: 85400, euCurti: false, comments: 1200, podeExcluir: false, verificado: true },
         { id: '2', nome: "GrowDev", arroba: "growdevers", texto: "Vamos codar hoje?", foto: "/assets/growdev.png", likes: 1200, euCurti: false, comments: 45, podeExcluir: false, verificado: true },
-        { id: '3', nome: "Dexter Moser", arroba: "michaelC.Hall", texto: "Open your eyes and look at what you did!", foto: "/assets/Michael C. Hall.jpg", likes: 1200, euCurti: false, comments: 45, podeExcluir: false, verificado: true }
+        { id: '3', nome: "Dexter Moser", arroba: "michaelC.Hall", texto: "Open your eyes and look at what you did!", foto: "/assets/Michael C. Hall.jpg", likes: 1200, euCurti: false, comments: 4550, podeExcluir: false, verificado: true }
     ];
 
     function renderizarFeed() {
