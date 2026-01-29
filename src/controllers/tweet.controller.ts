@@ -4,6 +4,7 @@ import { TweetService } from "../services/tweet-service";
 const tweetService = new TweetService();
 
 export class TweetController {
+
   async handle(req: Request, res: Response) {
     try {
       const { content, userId } = req.body;
@@ -18,6 +19,7 @@ export class TweetController {
       return res.status(400).json({ error: error.message });
     }
   }
+
   async index(req: Request, res: Response) {
     try {
       const tweets = await tweetService.findAll();
@@ -36,7 +38,6 @@ export class TweetController {
       return res.status(400).json({ error: "Erro ao deletar" });
     }
   }
-
   async feed(req: Request, res: Response) {
     try {
       const { userId } = req.params; 
@@ -46,4 +47,40 @@ export class TweetController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  async toggleLike(req: Request, res: Response) {
+    try {
+      const { tweetId, userId } = req.body;
+
+      if (!tweetId || !userId) {
+        return res.status(400).json({ error: "ID do tweet e ID do usuário são obrigatórios." });
+      }
+
+      const result = await tweetService.toggleLike(tweetId, userId);
+      return res.status(200).json(result);
+    } catch (error: any) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+  // Dentro da classe TweetController
+
+async like(req: Request, res: Response) {
+    try {
+        const { tweetId, userId } = req.body;
+        const result = await tweetService.like(tweetId, userId);
+        return res.status(200).json(result);
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
+
+async unlike(req: Request, res: Response) {
+    try {
+        const { tweetId, userId } = req.body;
+        const result = await tweetService.unlike(tweetId, userId);
+        return res.status(200).json(result);
+    } catch (error: any) {
+        return res.status(400).json({ error: error.message });
+    }
+}
 }

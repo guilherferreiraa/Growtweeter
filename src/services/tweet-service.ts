@@ -11,7 +11,7 @@ export class TweetService {
       include: { 
         user: true, 
         likes: true,
-        _count: { select: { comments: true } } // Adicionado para manter o padrão
+        _count: { select: { comments: true } } 
       }
     });
   }
@@ -31,9 +31,6 @@ export class TweetService {
       orderBy: { createdAt: 'desc' }
     });
   }
-
-  // ... toggleLike e delete permanecem iguais ...
-
   async findFollowerFeed(userId: string) {
     const following = await prisma.follow.findMany({
       where: { followerId: userId },
@@ -48,7 +45,7 @@ export class TweetService {
       include: {
         user: true,
         likes: true,
-        _count: { select: { comments: true } } // Adicionado aqui para o feed não mostrar 0 comentários
+        _count: { select: { comments: true } }
       },
       orderBy: { createdAt: 'desc' }
     });
@@ -73,6 +70,27 @@ export class TweetService {
     });
     return { message: "Tweet curtido com sucesso!" };
   }
+
+async like(tweetId: string, userId: string) {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new Error("Usuário não encontrado.");
+
+    // Verifica se já existe para não duplicar erro no banco
+    const existingLike = await prisma.like.findFirst({ where: { tweetId, userId } });
+    if (existingLike) return { message: "Você já curtiu este tweet." };
+
+    await prisma.like.create({ data: { tweetId, userId } });
+    return { message: "Tweet curtido com sucesso!" };
+}
+
+async unlike(tweetId: string, userId: string) {
+    const existingLike = await prisma.like.findFirst({ where: { tweetId, userId } });
+    
+    if (!existingLike) throw new Error("Curtida não encontrada.");
+
+    await prisma.like.delete({ where: { id: existingLike.id } });
+    return { message: "Curtida removida." };
+}
 
   async delete(id: string) {
     return await prisma.tweet.delete({

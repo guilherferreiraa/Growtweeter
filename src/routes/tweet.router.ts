@@ -1,12 +1,9 @@
 import { Router } from "express";
 import { TweetController } from "../controllers/tweet.controller";
-import { LikeController } from "../controllers/like.controller";
-import { CommentController } from "../controllers/comment.controller";
+import { prisma } from "../database/prisma.database";
  
 const tweetRouter = Router();
 const tweetController = new TweetController();
-const likeController = new LikeController();
-const commentController = new CommentController();
 
 tweetRouter.get("/tweet", tweetController.index); 
 tweetRouter.get("/tweet/feed", (req, res) => tweetController.feed(req, res));
@@ -14,11 +11,23 @@ tweetRouter.get("/tweet/feed", (req, res) => tweetController.feed(req, res));
 // --- Ações de Tweet 
 tweetRouter.post("/tweet", (req, res) => tweetController.handle(req, res));
 tweetRouter.delete("/tweet/:id", (req, res) => tweetController.destroy(req, res));
-tweetRouter.post("/tweet/comment", (req, res) => commentController.store(req, res));
-tweetRouter.delete("/tweet/comment/:id", (req, res) => commentController.destroy(req, res));
 
 // --- Likes ---
-tweetRouter.post("/tweet/like", (req, res) => likeController.handle(req, res));
-tweetRouter.post("/tweet/unlike", (req, res) => likeController.destroy(req, res));
+tweetRouter.post("/tweet/like", (req, res) => tweetController.like(req, res));
+tweetRouter.post("/tweet/unlike", (req, res) => tweetController.unlike(req, res));
+
+// --- Comments ---
+tweetRouter.post("/comment", async (req, res) => {
+  const { content, userId, tweetId } = req.body;
+
+  try {
+    const newComment = await prisma.comment.create({
+      data: { content, userId, tweetId }
+    });
+    return res.status(201).json(newComment);
+  } catch (error) {
+    return res.status(500).json({ error: "Erro ao criar comentário" });
+  }
+});
 
 export default tweetRouter;
