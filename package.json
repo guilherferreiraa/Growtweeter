@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only --watch src ./src/index.ts",
     "build": "prisma generate && tsc",
     "postinstall": "prisma generate",
-    "start": "node ./build/src/index.js"
+    "start": "node build/index.js"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
