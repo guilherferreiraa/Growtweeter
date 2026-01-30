@@ -3,11 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputTweet = document.getElementById('tweet-content');
     const btnTweetar = document.getElementById('btn-tweetar');
     const btnTema = document.getElementById('theme-toggle');
-   
-    const API_URL = window.location.hostname === 'localhost' 
+  const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
     ? 'http://localhost:3333' 
     : 'https://growtweet.vercel.app';
-    
+
+
     let feed = [];
     let user = { id: '', username: 'Guilherme' };
 

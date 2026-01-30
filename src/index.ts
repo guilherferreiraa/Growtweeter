@@ -5,19 +5,16 @@ import path from "path";
 import userRouter from "./routes/user.router"; 
 import tweetRouter from "./routes/tweet.router";
 import likeRouter from "./routes/like.router";
+import followRouter from "./routes/follow.router";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Coloque logo abaixo do app.use(express.json())
-app.get("/teste", (req, res) => {
-    res.send("O SERVIDOR ESTÁ VIVO!");
-});
-
 app.use(userRouter); 
 app.use(tweetRouter);
 app.use(likeRouter);
+app.use(followRouter);
 
 const publicPath = path.resolve(__dirname, ".."); 
 

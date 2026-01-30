@@ -62,7 +62,7 @@ export class TweetController {
       return res.status(400).json({ error: error.message });
     }
   }
-  // Dentro da classe TweetController
+
 
 async like(req: Request, res: Response) {
     try {

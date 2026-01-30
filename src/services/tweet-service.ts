@@ -10,8 +10,7 @@ export class TweetService {
       data: { content, userId },
       include: { 
         user: true, 
-        likes: true,
-        _count: { select: { comments: true } } 
+        likes: true, 
       }
     });
   }
@@ -24,7 +23,6 @@ export class TweetService {
         _count: {
           select: {
              likes: true,
-             comments: true 
             }
         }
       },
