@@ -32,26 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 window.curtir = async (tweetId) => {
-    // 1. O NOME CORRETO É 'feed', não 'tweets'
-    const tweet = feed.find(t => t.id === tweetId);
-    
+    const tweet = tweets.find(t => t.id === tweetId);
     console.log("Dados do tweet clicado", tweet);
     if (!tweet) return;
-
-    // Lógica para os tweets fixos (não salvam no banco real)
-    if (["1", "2", "3"].includes(tweetId)) {
-        tweet.euCurti = !tweet.euCurti;
-        tweet.likes += tweet.euCurti ? 1 : -1;
-        renderizarFeed();
-        return;
-    }
-
     const acao = tweet.euCurti ? 'unlike' : 'like';
 
     try {
-        const urlFinal = `${API_URL}/tweet/${acao}`.replace(/([^:]\/)\/+/g, "$1");
-        
-        const res = await fetch(urlFinal, {
+        const res = await fetch(`${API_URL}/tweet/${acao}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -61,7 +48,7 @@ window.curtir = async (tweetId) => {
         });
 
         if (res.ok) {
-            await carregarTweets(); // Recarrega tudo do banco
+            await carregarTweets();
         } else {
             const erro = await res.json();
             console.error("❌ Erro do servidor:", erro.message);
