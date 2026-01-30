@@ -1,14 +1,12 @@
-const { log } = require("console");
-
 document.addEventListener('DOMContentLoaded', () => {
     const timeline = document.getElementById('timeline');
     const inputTweet = document.getElementById('tweet-content');
     const btnTweetar = document.getElementById('btn-tweetar');
     const btnTema = document.getElementById('theme-toggle');
-  const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:3333' 
-    : 'https://growtweeter.vercel.app/';
 
+    const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:3333' 
+        : 'https://growtweeter.vercel.app';
 
     let feed = [];
     let user = { id: '', username: 'Guilherme' };
@@ -31,57 +29,61 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarTweets();
     }
 
-window.curtir = async (tweetId) => {
-    const tweet = tweets.find(t => t.id === tweetId);
-    console.log("Dados do tweet clicado", tweet);
-    if (!tweet) return;
-    const acao = tweet.euCurti ? 'unlike' : 'like';
-
-    try {
-        const res = await fetch(`${API_URL}/tweet/${acao}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                userId: user.id, 
-                tweetId: tweetId 
-            })
-        });
-
-        if (res.ok) {
-            await carregarTweets();
-        } else {
-            const erro = await res.json();
-            console.error("❌ Erro do servidor:", erro.message);
+    window.curtir = async (tweetId) => {
+        const tweet = feed.find(t => t.id === tweetId);
+        
+        if (!tweet) return;
+        if (["1", "2", "3"].includes(tweetId)) {
+            tweet.euCurti = !tweet.euCurti;
+            tweet.likes += tweet.euCurti ? 1 : -1;
+            renderizarFeed();
+            return;
         }
-    } catch (error) {
-        console.error("❌ Erro de conexão ao processar", acao);
-    }
-};
+
+        const acao = tweet.euCurti ? 'unlike' : 'like';
+
+        try {
+            const res = await fetch(`${API_URL}/tweet/${acao}`, { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    userId: user.id, 
+                    tweetId: tweetId 
+                })
+            });
+
+            if (res.ok) {
+                await carregarTweets(); 
+            }
+        } catch (error) {
+            console.error("❌ Erro ao processar no servidor");
+        }
+    };
 
     window.seguir = async (followingId) => {
-    if (followingId === user.id) return alert("Você não pode seguir a si mesmo!");
+        if (followingId === user.id) return alert("Você não pode seguir a si mesmo!");
 
-    try {
-        const res = await fetch(`${API_URL}/follow`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                followerId: user.id,
-                followingId: followingId 
-            })
-        });
+        try {
+            const res = await fetch(`${API_URL}/follow`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    followerId: user.id,
+                    followingId: followingId 
+                })
+            });
 
-        if (res.ok) {
-            console.log("✅ Agora você segue este usuário!");
-            await carregarTweets();
-        } else {
-            const erro = await res.json();
-            alert(erro.error);
+            if (res.ok) {
+                console.log("✅ Agora você segue este usuário!");
+                await carregarTweets();
+            } else {
+                const erro = await res.json();
+                alert(erro.error);
+            }
+        } catch (error) {
+            console.error("❌ Erro ao seguir usuário");
         }
-    } catch (error) {
-        console.error("❌ Erro ao seguir usuário");
-    }
-};
+    };
 
     if (btnTweetar) {
         btnTweetar.onclick = async () => {
@@ -116,7 +118,6 @@ window.curtir = async (tweetId) => {
                 texto: t.content,
                 foto: "/assets/fotoDePerfil.jpg",
                 likes: t.likes ? t.likes.length : 0,
-
                 euCurti: t.likes ? t.likes.some(l => l.userId === user.id) : false,
                 comments: 0
             }));
@@ -155,7 +156,6 @@ window.curtir = async (tweetId) => {
             </div>`).join('');
     }
 
-    // --- TEMA E INICIALIZAÇÃO ---
     const aplicarTema = (tema) => {
         document.documentElement.classList.toggle('dark-mode', tema === 'dark');
         if (btnTema) btnTema.textContent = tema === 'dark' ? '🌙' : '☀️';
