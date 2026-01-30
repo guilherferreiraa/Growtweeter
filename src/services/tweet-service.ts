@@ -43,7 +43,6 @@ export class TweetService {
       include: {
         user: true,
         likes: true,
-        _count: { select: { comments: true } }
       },
       orderBy: { createdAt: 'desc' }
     });
