@@ -27,10 +27,8 @@ app.get("/", (req, res) => {
 });
 
 const PORT = Number(process.env.PORT) || 3333;
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(PORT, "0.0.0.0", () => {
-        console.log(`🚀 Backend rodando em http://localhost:${PORT}`);
-    });
-}
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Servidor pronto na porta ${PORT}`);
+});
 
 export default app;
