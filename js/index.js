@@ -29,32 +29,31 @@ document.addEventListener('DOMContentLoaded', () => {
         carregarTweets();
     }
 
-    window.curtir = async (tweetId) => {
-        if (["1", "2", "3"].includes(tweetId)) {
-            const t = feedPadrao.find(x => x.id === tweetId);
-            t.euCurti = !t.euCurti;
-            t.likes += t.euCurti ? 1 : -1;
-            renderizarFeed();
-            return; 
-        }
+window.curtir = async (tweetId) => {
+    const tweet = tweets.find(t => t.id === tweetId);
+    if (!tweet) return;
+    const acao = tweet.euCurti ? 'unlike' : 'like';
 
-        try {
-            const res = await fetch(`${API_URL}/like`, { 
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    userId: user.id, 
-                    tweetId: tweetId 
-                })
-            });
+    try {
+        const res = await fetch(`${API_URL}/tweet/${acao}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                userId: user.id, 
+                tweetId: tweetId 
+            })
+        });
 
-            if (res.ok) {
-                await carregarTweets(); 
-            }
-        } catch (error) {
-            console.error("❌ Erro ao processar like no servidor");
+        if (res.ok) {
+            await carregarTweets();
+        } else {
+            const erro = await res.json();
+            console.error("❌ Erro do servidor:", erro.message);
         }
-    };
+    } catch (error) {
+        console.error("❌ Erro de conexão ao processar", acao);
+    }
+};
 
     window.seguir = async (followingId) => {
     if (followingId === user.id) return alert("Você não pode seguir a si mesmo!");
