@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { TweetController } from "../controllers/tweet.controller";
-import { prisma } from "../database/prisma.database";
  
 const tweetRouter = Router();
 const tweetController = new TweetController();
