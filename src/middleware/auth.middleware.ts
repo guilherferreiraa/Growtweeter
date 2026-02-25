@@ -18,7 +18,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   }
 
   const [scheme, token] = parts;
-const secret = process.env.JWT_SECRET || "supersecret123";
+  const secret = process.env.JWT_SECRET;
 
   if (!secret) {
     return res.status(500).json({ error: "Erro de configuração do servidor." });
