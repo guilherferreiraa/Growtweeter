@@ -10,14 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_URL =
     window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
       ? "http://localhost:3333"
-      : "https://growtweeter.vercel.app";
+      : "https://SUA-API-NO-RENDER.onrender.com"; // <--- TROQUE PELO LINK DO RENDER
 
   const token = localStorage.getItem("token");
   let user = JSON.parse(localStorage.getItem("user")) || {};
   let feed = [];
 
   if (!token && !window.location.pathname.includes("login.html") && !window.location.pathname.includes("cadastro.html")) {
-    window.location.href = "./login.html";
+    window.location.href = "login.html"; 
     return;
   }
 
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      window.location.href = "./login.html";
+      window.location.href = "login.html";
     };
   }
 
