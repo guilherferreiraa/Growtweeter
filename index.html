@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M20,20 Q10,20 10,30 L10,70 Q10,80 20,80 L35,80 L50,95 L50,80 L80,80 Q90,80 90,70 L90,30 Q90,20 80,20 Z%22 fill=%22%231DA1F2%22/><text x=%2250%%22 y=%2255%%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 font-size=%2250%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>G</text></svg>">
-    
+
     <script>
-        (function() {
+        (function () {
             const tema = localStorage.getItem('theme') || 'dark';
             if (tema === 'dark') document.documentElement.classList.add('dark-mode');
         })();
@@ -15,6 +16,7 @@
     <link rel="stylesheet" href="css/index.css">
     <title>Growtweet - Feed</title>
 </head>
+
 <body>
     <div class="container">
         <aside class="sidebar-left">
@@ -24,18 +26,22 @@
                     <button id="theme-toggle" class="btn-theme">🌙</button>
                 </div>
                 <nav class="nav-menu">
-                    <a href="main.html" class="active">🏠 Página Inicial</a>
-                    <a href="">🔍 Explorar</a>
-                    <a href="">👤 Perfil</a>
+                    <a href="index.html" class="active">🏠 Página Inicial</a>
+                    <a href="#">🔍 Explorar</a>
+                    <a href="#">👤 Perfil</a>
                 </nav>
             </div>
-            
+
             <div class="profile-section">
                 <div class="user-info">
-                    <img src="/assets/fotoDePerfil.jpg" class="avatar" alt="Meu Perfil">
+                    <img id="user-avatar" 
+                         src="https://cdn-icons-png.flaticon.com/512/149/149071.png" 
+                         class="avatar" 
+                         alt="Meu Perfil"
+                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                     <div class="user-text">
-                        <strong id="user-display-name">Guilherme Ferreira</strong>
-                        <span id="user-display-handle">@ferreirauilhermee</span>
+                        <strong id="user-display-name">Carregando...</strong>
+                        <span id="user-display-handle">@usuario</span>
                     </div>
                 </div>
                 <a href="login.html" id="logout-btn" class="logout-text">Sair</a>
@@ -48,14 +54,18 @@
             </header>
 
             <section class="tweet-box">
-                <img src="/assets/fotoDePerfil.jpg" class="avatar" alt="User">
+                <img id="user-tweet-img" 
+                     src="https://cdn-icons-png.flaticon.com/512/149/149071.png" 
+                     class="avatar" 
+                     alt="User"
+                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                 <div class="input-area">
                     <textarea placeholder="O que está acontecendo?" id="tweet-content"></textarea>
                     <button id="btn-tweetar">Tweetar</button>
                 </div>
             </section>
 
-            <div id="timeline"></div> 
+            <div id="timeline"></div>
         </main>
 
         <aside class="sidebar-right">
@@ -67,23 +77,11 @@
                 </div>
                 <div class="trend-item">
                     <span>Tecnologia · Bombando</span>
-                    <strong>PrismaORM:Apresenta a versão 7</strong>
-                </div>
-                <div class="trend-item">
-                    <span>Mundo Todo · Bombando</span>
-                    <strong>Wagner Moura ganha o oscar</strong>
-                </div>
-                <div class="trend-item">
-                    <span>Movies · Bombando</span>
-                    <strong>BlumHouse comenta sobre o futuro de FNAF</strong>
-                </div>                
-                <div class="trend-item">
-                    <span>Paramout · Bombando</span>
-                    <strong>Tudo sobre a s2 de Dexter: Resurrection</strong>
+                    <strong>PrismaORM: Versão 7</strong>
                 </div>
             </div>
         </aside>
     </div>
-    <script src="js/index.js" defer></script> 
+    <script src="js/index.js" defer></script>
 </body>
 </html>

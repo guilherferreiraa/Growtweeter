@@ -10,8 +10,10 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   username  String   @unique
+  name     String
   email     String   @unique
   password  String
+  avatarUrl String 
   isLogged Boolean  @default(false)
   tweets    Tweet[]
   likes     Like[]
@@ -20,13 +22,17 @@ model User {
 }
 //---------------------------------------------------------------//
 model Tweet {
-  id        String   @id @default(uuid())
-  content   String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  likes     Like[]
+  id             String   @id @default(uuid())
+  content        String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type           String   @default("T") 
+  parentTweetId  String?  
+  parentTweet    Tweet?   @relation("TweetReplies", fields: [parentTweetId], references: [id], onDelete: SetNull)
+  replies        Tweet[]  @relation("TweetReplies")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  likes          Like[]
 }
 //---------------------------------------------------------------//
 model Like {

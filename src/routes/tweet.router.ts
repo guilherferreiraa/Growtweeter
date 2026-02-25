@@ -1,18 +1,18 @@
 import { Router } from "express";
 import { TweetController } from "../controllers/tweet.controller";
- 
+import { authMiddleware } from "../middleware/auth.middleware";
+
 const tweetRouter = Router();
 const tweetController = new TweetController();
 
-tweetRouter.get("/tweet", tweetController.index); 
-tweetRouter.get("/tweet/feed", (req, res) => tweetController.feed(req, res));
+tweetRouter.get("/tweet", authMiddleware, (req, res) => tweetController.index(req, res)); 
+tweetRouter.get("/tweet/feed", authMiddleware, (req, res) => tweetController.feed(req, res));
 
-// --- Ações de Tweet 
-tweetRouter.post("/tweet", (req, res) => tweetController.handle(req, res));
-tweetRouter.delete("/tweet/:id", (req, res) => tweetController.destroy(req, res));
+tweetRouter.post("/tweet", authMiddleware, (req, res) => tweetController.handle(req, res));
+tweetRouter.delete("/tweet/:id", authMiddleware, (req, res) => tweetController.destroy(req, res));
+tweetRouter.post("/tweet/:id/reply", authMiddleware, (req, res) => tweetController.reply(req, res));
 
-// --- Likes ---
-tweetRouter.post("/tweet/like", (req, res) => tweetController.like(req, res));
-tweetRouter.post("/tweet/unlike", (req, res) => tweetController.unlike(req, res));
+tweetRouter.post("/like/:id", authMiddleware, (req, res) => tweetController.like(req, res));
+tweetRouter.delete("/unlike/:id", authMiddleware, (req, res) => tweetController.unlike(req, res));
 
 export default tweetRouter;

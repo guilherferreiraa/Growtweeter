@@ -63,7 +63,6 @@ body {
     font-weight: bold; 
 }
 
-
 .btn-theme { 
     background: transparent; 
     border: none; 
@@ -155,9 +154,8 @@ body {
 
 .tweet-card { 
     display: flex; 
-    padding: 15px; 
+    padding: 0; 
     border-bottom: 1px solid var(--border); 
-    gap: 12px; 
 }
 
 .avatar { 
@@ -182,11 +180,9 @@ body {
     align-items: center; 
     gap: 5px; 
     font-size: 0.9rem; 
-}
-
-.btn-action {
     transition: transform 0.1s ease;
 }
+
 .btn-action:active {
     transform: scale(1.2); 
 }
@@ -246,54 +242,103 @@ body {
     font-weight: bold; 
 }
 
-.comments-container {
-    margin-top: 10px;
-    border-left: 2px solid var(--border);
-    padding-left: 10px;
-}
-
-.comment-item {
-    display: flex;
-    gap: 10px;
-    margin-top: 8px;
-    padding: 5px 0;
-}
-
 .avatar-small {
     width: 30px;
     height: 30px;
     border-radius: 50%;
 }
 
-.comment-content {
-    flex: 1;
-    background: var(--bg-trending);
-    padding: 8px;
-    border-radius: 10px;
-    font-size: 0.9rem;
+.avatar-tweet {
+    width: 48px;           
+    height: 48px;           
+    border-radius: 50%;    
+    object-fit: cover;     
+    flex-shrink: 0;      
+    border: 1px solid var(--border);
 }
 
-.comment-header {
+#user-profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.tweet-container {
+    display: flex;
+    align-items: flex-start; 
+    padding: 12px 16px;
+    gap: 12px;
+    width: 100%;
+}
+
+.tweet-content {
+    flex: 1;
+}
+
+.tweet-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    margin-bottom: 4px;
 }
 
-.comment-header strong span {
+.header-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-info strong {
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+.header-info span {
     color: var(--text-secondary);
-    font-size: 0.8rem;
-    font-weight: normal;
+    font-size: 0.9rem;
 }
 
-.btn-del-com {
+.btn-follow-mini {
+    background-color: var(--text-main);
+    color: var(--bg-feed);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-follow-mini:hover {
+    opacity: 0.8;
+}
+
+.btn-follow-mini.following {
+    background-color: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+
+.btn-follow-mini.following:hover {
+    background-color: rgba(244, 33, 46, 0.1);
+    color: #f4212e;
+    border-color: #f4212e;
+}
+
+.btn-like {
     background: transparent;
     border: none;
-    color: var(--text-secondary);
     cursor: pointer;
-    font-size: 1.1rem;
-    line-height: 1;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: transform 0.1s ease;
 }
 
-.btn-del-com:hover {
-    color: #f4212e;
+.btn-like:active {
+    transform: scale(1.2);
 }

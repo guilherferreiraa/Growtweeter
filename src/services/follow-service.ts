@@ -1,38 +1,38 @@
 import { PrismaClient } from "@prisma/client";
+
 const prisma = new PrismaClient();
+
 export class FollowService {
-    async follow(followerId: string, followingId: string) {
-        const existingFollow = await prisma.follow.findFirst({
-            where: { followerId, followingId }
-        });
-
-        if (existingFollow) {
-            throw new Error("Você já segue este usuário.");
-        }
-
-        return await prisma.follow.create({
-            data: { followerId, followingId }
-        });
+  async follow(followerId: string, followingId: string) {
+    if (followerId === followingId) {
+      throw new Error("Você não pode seguir a si mesmo.");
     }
 
-    async unfollow(id: string) {
-        const follow = await prisma.follow.findUnique({
-            where: { id }
-        });
+    const existing = await prisma.follow.findFirst({
+      where: { followerId, followingId },
+    });
 
-        if (!follow) {
-            throw new Error("Você não segue este usuário ou a relação já foi removida.");
-        }
-
-        return await prisma.follow.delete({
-            where: { id }
-        });
+    if (existing) {
+      throw new Error("Você já segue este usuário.");
     }
+
+    return await prisma.follow.create({
+      data: { followerId, followingId },
+    });
+  }
+
+  async unfollow(followerId: string, followingId: string) {
+    const result = await prisma.follow.deleteMany({
+      where: {
+        followerId: followerId,
+        followingId: followingId,
+      },
+    });
+
+    if (result.count === 0) {
+      throw new Error("Você não segue este usuário.");
+    }
+
+    return result;
+  }
 }
-
-    
-    
-    
-    
-
-    

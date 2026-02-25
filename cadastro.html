@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro - Growtweet</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><path d=%22M20,20 Q10,20 10,30 L10,70 Q10,80 20,80 L35,80 L50,95 L50,80 L80,80 Q90,80 90,70 L90,30 Q90,20 80,20 Z%22 fill=%22%231DA1F2%22/><text x=%2250%%22 y=%2255%%22 font-family=%22Arial, sans-serif%22 font-weight=%22bold%22 font-size=%2250%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>G</text></svg>">
+    <script>
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark-mode');
+    </script>
+</head>
+
+<body>
+    <div class="auth-container">
+        <button type="button" id="toggle-theme" class="btn-tema-auth">☀️</button>
+        <h1 class="logo-small">growtweet</h1>
+        <h2>Criar sua conta</h2>
+
+        <form id="form-cadastro">
+            <input type="text" id="reg-name" placeholder="Nome" required>
+            <input type="text" id="reg-username" placeholder="Usuário" required>
+            <input type="email" id="reg-email" placeholder="E-mail" required>
+            <input type="password" id="reg-password" placeholder="Senha" required>
+            <input type="url" id="reg-avatar" placeholder="URL da Imagem de Perfil">
+            <button type="submit" id="btn-submit">Inscrever-se</button>
+        </form>
+
+        <p class="auth-footer">Já tem uma conta? <a href="/login">Entre aqui</a></p>
+    </div>
+    <script src="/js/cadastro.js"></script>
+</body>
+
+</html>

@@ -5,18 +5,35 @@ export class UserService {
   async create(data: UserDTO) {
     return await prisma.user.create({
       data: {
+        name: data.name,
         username: data.username,
         email: data.email,
         password: data.password,
+        avatarUrl: data.avatarUrl,
       },
     });
   }
+
+  async findProfile(id: string) {
+    return await prisma.user.findUnique({
+      where: { id },
+      include: {
+        tweets: {
+          orderBy: { createdAt: "desc" },
+        },
+        followers: true,
+        following: true,
+      },
+    });
+  }
+
   async findAll() {
     return await prisma.user.findMany({
       select: { id: true, username: true, email: true, isLogged: true }
     });
   }
-async login(email: string, pass: string) {
+
+  async login(email: string, pass: string) {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || user.password !== pass) {
@@ -26,25 +43,27 @@ async login(email: string, pass: string) {
         where: { id: user.id },
         data: { isLogged: true }
     });
-}
-async logout(id: string) {
-  const user = await prisma.user.findUnique({ where: { id } });
-  
-  if (!user) throw new Error("Usuário não encontrado.");
-  return await prisma.user.update({
-    where: { id },
-    data: { isLogged: false }
-  });
-}
-async delete(id: string) {
-  const user = await prisma.user.findUnique({ where: { id } });
-
-  if (!user) {
-    throw new Error("Usuário não encontrado.");
   }
 
-  return await prisma.user.delete({ 
-    where: { id } 
-  });
-}
+  async logout(id: string) {
+    const user = await prisma.user.findUnique({ where: { id } });
+    
+    if (!user) throw new Error("Usuário não encontrado.");
+    return await prisma.user.update({
+      where: { id },
+      data: { isLogged: false }
+    });
+  }
+
+  async delete(id: string) {
+    const user = await prisma.user.findUnique({ where: { id } });
+
+    if (!user) {
+      throw new Error("Usuário não encontrado.");
+    }
+
+    return await prisma.user.delete({ 
+      where: { id } 
+    });
+  }
 }

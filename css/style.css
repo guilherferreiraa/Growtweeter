@@ -1,0 +1,125 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --border: #cfd9de;
+}
+
+.dark-mode {
+    --bg-color: #15202b;
+    --text-color: #ffffff;
+    --border: #38444d;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.2s;
+}
+
+.auth-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    padding: 50px 30px 30px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.btn-tema-auth {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.logo-small {
+    color: #1da1f2;
+    font-size: 28px;
+    margin: 0 0 10px;
+    text-align: left;
+}
+
+h2 {
+    margin: 0 0 20px;
+    font-size: 22px;
+}
+
+.auth-container input {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 15px;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.auth-container input:focus {
+    border-color: #1da1f2;
+    outline: none;
+}
+
+#btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.auth-footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #71767b;
+}
+
+.auth-footer a {
+    color: #1da1f2;
+    text-decoration: none;
+}
+.avatar-tweet {
+    width: 48px;           
+    height: 48px;          
+    border-radius: 50%;    
+    object-fit: cover;     
+    flex-shrink: 0;      
+    border: 1px solid var(--border);
+}
+
+#user-profile-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.tweet-container {
+    display: flex;
+    align-items: flex-start; 
+    padding: 12px 16px;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+}

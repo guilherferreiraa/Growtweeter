@@ -15,19 +15,18 @@ export class LikeService {
             data: { userId, tweetId }
         });
     }
+    async unlike(userId: string, tweetId: string) {
+        const result = await prisma.like.deleteMany({
+            where: {
+                userId,
+                tweetId
+            }
+        });
 
-async unlike(id: string) {
-    const like = await prisma.like.findUnique({
-        where: { id }
-    });
+        if (result.count === 0) {
+            throw new Error("Este like não existe ou já foi removido.");
+        }
 
-
-    if (!like) {
-        throw new Error("Este like não existe ou já foi removido.");
+        return result;
     }
-
-    return await prisma.like.delete({
-        where: { id }
-    });
-}
 }
