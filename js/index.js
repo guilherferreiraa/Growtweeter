@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_URL =
     window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
       ? "http://localhost:3333"
-      : "https://SUA-API-NO-RENDER.onrender.com"; // <--- TROQUE PELO LINK DO RENDER
+      : "https://growtweeter-tn97.onrender.com"; 
 
   const token = localStorage.getItem("token");
   let user = JSON.parse(localStorage.getItem("user")) || {};
