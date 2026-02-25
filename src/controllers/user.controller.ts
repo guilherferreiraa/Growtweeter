@@ -5,19 +5,24 @@ import jwt from "jsonwebtoken";
 const userService = new UserService();
 
 export class UserController {
-  async login(req: Request, res: Response) {
+async login(req: Request, res: Response) {
     try {
       const { email, password } = req.body;
       const user = await userService.login(email as string, password as string);
 
-      const secret = process.env.JWT_SECRET!;
+      console.log("TESTE JWT_SECRET NO RENDER:", process.env.JWT_SECRET);
+
+      const secret = process.env.JWT_SECRET;
+
+      if (!secret) {
+          throw new Error("A chave JWT_SECRET não foi carregada do ambiente!");
+      }
 
       const token = jwt.sign(
         { id: user.id }, 
         secret, 
         { expiresIn: "1d" }
       );
-
       return res.status(200).json({
         message: "Login efetuado com sucesso!",
         token,
