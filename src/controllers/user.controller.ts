@@ -12,7 +12,7 @@ async login(req: Request, res: Response) {
 
       console.log("TESTE JWT_SECRET NO RENDER:", process.env.JWT_SECRET);
 
-      const secret = process.env.JWT_SECRET || "chave_mestra_reserva_123";
+     const secret = process.env.JWT_SECRET;
 
       if (!secret) {
           throw new Error("A chave JWT_SECRET não foi carregada do ambiente!");
