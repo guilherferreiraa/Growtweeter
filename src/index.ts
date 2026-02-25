@@ -12,20 +12,28 @@ app.use(cors());
 app.use(express.json());
 
 const publicPath = path.resolve();
+
 app.use("/css", express.static(path.join(publicPath, "css")));
 app.use("/js", express.static(path.join(publicPath, "js")));
 app.use("/assets", express.static(path.join(publicPath, "assets")));
+app.use(express.static(publicPath)); 
 
 app.use(userRouter);
 app.use(tweetRouter);
 app.use(followRouter);
+app.use(likeRouter);
 
-app.get("/", (req, res) => res.sendFile(path.join(publicPath, "index.html")));
+app.get("/", (req, res) => res.redirect("/login"));
+
 app.get("/login", (req, res) =>
-  res.sendFile(path.join(publicPath, "login.html")),
+  res.sendFile(path.join(publicPath, "login.html"))
 );
+
 app.get("/cadastro", (req, res) =>
-  res.sendFile(path.join(publicPath, "cadastro.html")),
+  res.sendFile(path.join(publicPath, "cadastro.html"))
+);
+app.get("/home", (req, res) => 
+  res.sendFile(path.join(publicPath, "index.html"))
 );
 
 const PORT = Number(process.env.PORT) || 3333;
