@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.hostname === "localhost" ||
         window.location.hostname === "127.0.0.1"
           ? "http://localhost:3333"
-          : "https://growtweeter.vercel.app";
+          : "https://growtweeter-tn97.onrender.com";
 
       const email = document.getElementById("login-email").value.trim();
       const password = document.getElementById("login-password").value;
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error("Erro no login:", error);
-        alert("Erro ao conectar com o servidor. Verifique sua conexão.");
+        alert("Erro ao conectar com o servidor.");
       }
     };
   }

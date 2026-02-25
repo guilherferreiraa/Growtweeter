@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- SELEÇÃO DE ELEMENTOS ---
   const timeline = document.getElementById("timeline");
   const inputTweet = document.getElementById("tweet-content");
   const btnTweetar = document.getElementById("btn-tweetar");
@@ -11,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_URL =
     window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
       ? "http://localhost:3333"
-      : "https://growtweeter.vercel.app";
+      : "https://growtweeter-tn97.onrender.com";
 
   const token = localStorage.getItem("token");
   let user = JSON.parse(localStorage.getItem("user")) || {};
@@ -31,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // --- RENDERIZAÇÃO DO FEED ---
   function renderizarFeed() {
     if (!timeline) return;
     timeline.innerHTML = "";
@@ -42,10 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const usernameAutor = tweet.arroba ? tweet.arroba.trim() : "usuario";
       const fotoAutor = `https://github.com/${usernameAutor}.png`;
-
       const eMeuTweet = tweet.userId === user.id;
       
-      // Ajuste na classe e texto do botão de seguir
       const btnSeguirHtml = !eMeuTweet
         ? `<button class="btn-follow-mini ${tweet.seguindo ? "following" : ""}" 
                    onclick="toggleFollow('${tweet.userId}', this)">
@@ -90,7 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const usuarios = await res.json();
-      const meuUsuario = usuarios.find((u) => u.username.trim() === user.username.trim());
+      
+      if (!Array.isArray(usuarios)) return;
+
+      const meuUsuario = usuarios.find((u) => u.username?.trim() === user.username?.trim());
 
       if (meuUsuario) {
         user.id = meuUsuario.id;
@@ -125,6 +124,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const tweetsBanco = await res.json();
 
+      if (!Array.isArray(tweetsBanco)) return;
+
       feed = tweetsBanco.map((t) => ({
         id: t.id,
         userId: t.user?.id || t.userId,
@@ -153,13 +154,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) { console.error(e); }
   };
 
-  // --- AJUSTE NA FUNÇÃO DE SEGUIR ---
   window.toggleFollow = async (userIdParaSeguir, botao) => {
     const jaSeguindo = botao.classList.contains("following");
     const endpoint = jaSeguindo ? "unfollow" : "follow";
     const metodo = jaSeguindo ? "DELETE" : "POST";
 
-    // Otimismo: muda o visual antes da resposta do servidor para parecer mais rápido
     botao.disabled = true; 
 
     try {
@@ -169,10 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (res.ok) {
-        // Se a API confirmou, recarregamos para atualizar o estado global
         await sincronizarUsuario();
       } else {
-        alert("Não foi possível processar a ação. Tente novamente.");
         botao.disabled = false;
       }
     } catch (e) { 
