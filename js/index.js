@@ -10,14 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_URL =
     window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
       ? "http://localhost:3333"
-      : "https://growtweeter-tn97.onrender.com";  
+      : "https://growtweeter-tn97.onrender.com";
 
   const token = localStorage.getItem("token");
   let user = JSON.parse(localStorage.getItem("user")) || {};
   let feed = [];
 
   if (!token && !window.location.pathname.includes("login.html") && !window.location.pathname.includes("cadastro.html")) {
-    window.location.href = "login.html"; 
+    window.location.href = "login.html";
     return;
   }
 
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const usernameAutor = tweet.arroba ? tweet.arroba.trim() : "usuario";
       const fotoAutor = tweet.avatarUrl || `https://github.com/${usernameAutor}.png`;
       const eMeuTweet = tweet.userId === user.id;
-      
+
       const btnSeguirHtml = !eMeuTweet
         ? `<button class="btn-follow-mini ${tweet.seguindo ? "following" : ""}" 
                    onclick="toggleFollow('${tweet.userId}', this)">
@@ -74,42 +74,41 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-async function sincronizarUsuario() {
-  const currentToken = localStorage.getItem("token");
-  if (!currentToken) return;
+  async function sincronizarUsuario() {
+    if (!token) return;
+    try {
+      const res = await fetch(`${API_URL}/user`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-  try {
-    const res = await fetch(`${API_URL}/user`, {
-      headers: { Authorization: `Bearer ${currentToken}` },
-    });
-    
-    const usuarios = await res.json();
+      const usuarios = await res.json();
+      if (!Array.isArray(usuarios)) return;
 
-    if (!Array.isArray(usuarios)) return;
+      const meuUsuario = usuarios.find((u) => u.username?.trim() === user.username?.trim());
 
-    const meuUsuario = usuarios.find((u) => u.username?.trim() === user.username?.trim());
+      if (meuUsuario) {
+        user.id = meuUsuario.id;
+        user.name = meuUsuario.name;
+        user.avatarUrl = meuUsuario.profileImage || `https://github.com/${meuUsuario.username.trim()}.png`;
 
-    if (meuUsuario) {
-      user.id = meuUsuario.id;
-      user.name = meuUsuario.name;
-      user.avatarUrl = meuUsuario.profileImage || `https://github.com/${meuUsuario.username.trim()}.png`;
-      
-      localStorage.setItem("user", JSON.stringify(user));
-      const nameEl = document.getElementById("user-display-name");
-      const handleEl = document.getElementById("user-display-handle");
-      const sideAvatar = document.getElementById("user-avatar");
-      const tweetAvatar = document.getElementById("user-tweet-img");
+        localStorage.setItem("user", JSON.stringify(user));
 
-      if (nameEl) nameEl.textContent = user.name;
-      if (handleEl) handleEl.textContent = `@${meuUsuario.username.trim()}`;
-      if (sideAvatar) sideAvatar.src = user.avatarUrl;
-      if (tweetAvatar) tweetAvatar.src = user.avatarUrl;
+        const nameEl = document.getElementById("user-display-name");
+        const handleEl = document.getElementById("user-display-handle");
+        const sideAvatar = document.getElementById("user-avatar");
+        const tweetAvatar = document.getElementById("user-tweet-img");
+
+        if (nameEl) nameEl.textContent = user.name;
+        if (handleEl) handleEl.textContent = `@${meuUsuario.username.trim()}`;
+        if (sideAvatar) sideAvatar.src = user.avatarUrl;
+        if (tweetAvatar) tweetAvatar.src = user.avatarUrl;
+      }
+    } catch (e) {
+      console.error("Erro na sincronização:", e);
     }
-  } catch (e) { 
-    console.error("Erro na sincronização:", e); 
+    carregarTweets();
   }
-  carregarTweets();
-}
+
   async function carregarTweets() {
     if (!token) return;
     try {
@@ -135,7 +134,9 @@ async function sincronizarUsuario() {
       }));
 
       renderizarFeed();
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   window.curtir = async (tweetId) => {
@@ -148,14 +149,16 @@ async function sincronizarUsuario() {
         headers: { Authorization: `Bearer ${token}` },
       });
       await carregarTweets();
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   window.toggleFollow = async (userIdParaSeguir, botao) => {
     const jaSeguindo = botao.classList.contains("following");
     const endpoint = jaSeguindo ? "unfollow" : "follow";
     const metodo = jaSeguindo ? "DELETE" : "POST";
-    botao.disabled = true; 
+    botao.disabled = true;
 
     try {
       const res = await fetch(`${API_URL}/${endpoint}/${userIdParaSeguir}`, {
@@ -168,7 +171,7 @@ async function sincronizarUsuario() {
       } else {
         botao.disabled = false;
       }
-    } catch (e) { 
+    } catch (e) {
       console.error(e);
       botao.disabled = false;
     }
@@ -181,9 +184,9 @@ async function sincronizarUsuario() {
       try {
         const res = await fetch(`${API_URL}/tweet`, {
           method: "POST",
-          headers: { 
-            "Content-Type": "application/json", 
-            Authorization: `Bearer ${token}` 
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({ content: texto }),
         });
@@ -191,7 +194,9 @@ async function sincronizarUsuario() {
           inputTweet.value = "";
           await carregarTweets();
         }
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+      }
     };
   }
 
