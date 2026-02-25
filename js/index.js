@@ -24,8 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnSair) {
     btnSair.onclick = (e) => {
       e.preventDefault();
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.clear();
       window.location.href = "login.html";
     };
   }
@@ -40,7 +39,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const usernameAutor = tweet.arroba ? tweet.arroba.trim() : "usuario";
       const fotoAutor = tweet.avatarUrl || `https://github.com/${usernameAutor}.png`;
-
       const eMeuTweet = tweet.userId === user.id;
       
       const btnSeguirHtml = !eMeuTweet
@@ -81,8 +79,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      
       const usuarios = await res.json();
-      const meuUsuario = usuarios.find((u) => u.username.trim() === user.username.trim());
+
+      if (!Array.isArray(usuarios)) return;
+
+      const meuUsuario = usuarios.find((u) => u.username?.trim() === user.username?.trim());
 
       if (meuUsuario) {
         user.id = meuUsuario.id;
@@ -91,12 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
         
         localStorage.setItem("user", JSON.stringify(user));
 
-        if (document.getElementById("user-display-name")) document.getElementById("user-display-name").textContent = user.name;
-        if (document.getElementById("user-display-handle")) document.getElementById("user-display-handle").textContent = `@${meuUsuario.username.trim()}`;
-        
+        const nameEl = document.getElementById("user-display-name");
+        const handleEl = document.getElementById("user-display-handle");
         const sideAvatar = document.getElementById("user-avatar");
         const tweetAvatar = document.getElementById("user-tweet-img");
 
+        if (nameEl) nameEl.textContent = user.name;
+        if (handleEl) handleEl.textContent = `@${meuUsuario.username.trim()}`;
         if (sideAvatar) sideAvatar.src = user.avatarUrl;
         if (tweetAvatar) tweetAvatar.src = user.avatarUrl;
       }
@@ -110,7 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`${API_URL}/feed`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      if (!res.ok) throw new Error("Erro ao carregar feed");
+
       const tweetsBanco = await res.json();
+      if (!Array.isArray(tweetsBanco)) return;
 
       feed = tweetsBanco.map((t) => ({
         id: t.id,
@@ -145,7 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const jaSeguindo = botao.classList.contains("following");
     const endpoint = jaSeguindo ? "unfollow" : "follow";
     const metodo = jaSeguindo ? "DELETE" : "POST";
-
     botao.disabled = true; 
 
     try {
@@ -157,7 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (res.ok) {
         await sincronizarUsuario();
       } else {
-        alert("Erro na ação de seguir.");
         botao.disabled = false;
       }
     } catch (e) { 
