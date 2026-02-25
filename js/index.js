@@ -74,39 +74,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  async function sincronizarUsuario() {
-    try {
-      const res = await fetch(`${API_URL}/user`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+async function sincronizarUsuario() {
+  const currentToken = localStorage.getItem("token");
+  if (!currentToken) return;
+
+  try {
+    const res = await fetch(`${API_URL}/user`, {
+      headers: { Authorization: `Bearer ${currentToken}` },
+    });
+    
+    const usuarios = await res.json();
+
+    if (!Array.isArray(usuarios)) return;
+
+    const meuUsuario = usuarios.find((u) => u.username?.trim() === user.username?.trim());
+
+    if (meuUsuario) {
+      user.id = meuUsuario.id;
+      user.name = meuUsuario.name;
+      user.avatarUrl = meuUsuario.profileImage || `https://github.com/${meuUsuario.username.trim()}.png`;
       
-      const usuarios = await res.json();
+      localStorage.setItem("user", JSON.stringify(user));
+      const nameEl = document.getElementById("user-display-name");
+      const handleEl = document.getElementById("user-display-handle");
+      const sideAvatar = document.getElementById("user-avatar");
+      const tweetAvatar = document.getElementById("user-tweet-img");
 
-      if (!Array.isArray(usuarios)) return;
-
-      const meuUsuario = usuarios.find((u) => u.username?.trim() === user.username?.trim());
-
-      if (meuUsuario) {
-        user.id = meuUsuario.id;
-        user.name = meuUsuario.name;
-        user.avatarUrl = meuUsuario.profileImage || `https://github.com/${meuUsuario.username.trim()}.png`;
-        
-        localStorage.setItem("user", JSON.stringify(user));
-
-        const nameEl = document.getElementById("user-display-name");
-        const handleEl = document.getElementById("user-display-handle");
-        const sideAvatar = document.getElementById("user-avatar");
-        const tweetAvatar = document.getElementById("user-tweet-img");
-
-        if (nameEl) nameEl.textContent = user.name;
-        if (handleEl) handleEl.textContent = `@${meuUsuario.username.trim()}`;
-        if (sideAvatar) sideAvatar.src = user.avatarUrl;
-        if (tweetAvatar) tweetAvatar.src = user.avatarUrl;
-      }
-    } catch (e) { console.error(e); }
-    carregarTweets();
+      if (nameEl) nameEl.textContent = user.name;
+      if (handleEl) handleEl.textContent = `@${meuUsuario.username.trim()}`;
+      if (sideAvatar) sideAvatar.src = user.avatarUrl;
+      if (tweetAvatar) tweetAvatar.src = user.avatarUrl;
+    }
+  } catch (e) { 
+    console.error("Erro na sincronização:", e); 
   }
-
+  carregarTweets();
+}
   async function carregarTweets() {
     if (!token) return;
     try {
