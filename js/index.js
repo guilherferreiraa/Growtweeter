@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
   async function carregarTweets() {
     if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/feed`, {
+      const res = await fetch(`${API_URL}/tweet/feed`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
