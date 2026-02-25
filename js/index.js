@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // --- SELEÇÃO DE ELEMENTOS ---
   const timeline = document.getElementById("timeline");
   const inputTweet = document.getElementById("tweet-content");
   const btnTweetar = document.getElementById("btn-tweetar");
@@ -27,11 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      window.location.href = "login.html";
+      window.location.href = "./login.html";
     };
   }
 
-  // --- RENDERIZAÇÃO DO FEED ---
   function renderizarFeed() {
     if (!timeline) return;
     timeline.innerHTML = "";
@@ -41,11 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
       tweetElement.classList.add("tweet-card");
 
       const usernameAutor = tweet.arroba ? tweet.arroba.trim() : "usuario";
-      const fotoAutor = `https://github.com/${usernameAutor}.png`;
+      const fotoAutor = tweet.avatarUrl || `https://github.com/${usernameAutor}.png`;
 
       const eMeuTweet = tweet.userId === user.id;
       
-      // Ajuste na classe e texto do botão de seguir
       const btnSeguirHtml = !eMeuTweet
         ? `<button class="btn-follow-mini ${tweet.seguindo ? "following" : ""}" 
                    onclick="toggleFollow('${tweet.userId}', this)">
@@ -80,11 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function sincronizarUsuario() {
-    const nameEl = document.getElementById("user-display-name");
-    const handleEl = document.getElementById("user-display-handle");
-    const sideAvatar = document.getElementById("user-avatar");
-    const tweetAvatar = document.getElementById("user-tweet-img");
-
     try {
       const res = await fetch(`${API_URL}/user`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -95,32 +87,27 @@ document.addEventListener("DOMContentLoaded", () => {
       if (meuUsuario) {
         user.id = meuUsuario.id;
         user.name = meuUsuario.name;
-        const usernameLimpo = meuUsuario.username.trim();
-        const fotoReal = `https://github.com/${usernameLimpo}.png`;
+        user.avatarUrl = meuUsuario.profileImage || `https://github.com/${meuUsuario.username.trim()}.png`;
         
-        user.avatarUrl = fotoReal;
         localStorage.setItem("user", JSON.stringify(user));
 
-        if (nameEl) nameEl.textContent = user.name;
-        if (handleEl) handleEl.textContent = `@${usernameLimpo}`;
+        if (document.getElementById("user-display-name")) document.getElementById("user-display-name").textContent = user.name;
+        if (document.getElementById("user-display-handle")) document.getElementById("user-display-handle").textContent = `@${meuUsuario.username.trim()}`;
         
-        if (sideAvatar) {
-            sideAvatar.src = fotoReal;
-            sideAvatar.onerror = () => sideAvatar.src = FOTO_PADRAO;
-        }
-        if (tweetAvatar) {
-            tweetAvatar.src = fotoReal;
-            tweetAvatar.onerror = () => tweetAvatar.src = FOTO_PADRAO;
-        }
+        const sideAvatar = document.getElementById("user-avatar");
+        const tweetAvatar = document.getElementById("user-tweet-img");
+
+        if (sideAvatar) sideAvatar.src = user.avatarUrl;
+        if (tweetAvatar) tweetAvatar.src = user.avatarUrl;
       }
-    } catch (e) { console.error("Erro na sincronização:", e); }
+    } catch (e) { console.error(e); }
     carregarTweets();
   }
 
   async function carregarTweets() {
     if (!token) return;
     try {
-      const res = await fetch(`${API_URL}/tweet`, {
+      const res = await fetch(`${API_URL}/feed`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const tweetsBanco = await res.json();
@@ -128,8 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
       feed = tweetsBanco.map((t) => ({
         id: t.id,
         userId: t.user?.id || t.userId,
-        nome: t.user?.name || t.user?.username || "Usuário",
+        nome: t.user?.name || "Usuário",
         arroba: t.user?.username || "user",
+        avatarUrl: t.user?.profileImage,
         texto: t.content,
         likes: t.likes ? t.likes.length : 0,
         euCurti: t.likes ? t.likes.some((l) => l.userId === user.id) : false,
@@ -137,7 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }));
 
       renderizarFeed();
-    } catch (e) { console.error("Erro ao carregar tweets:", e); }
+    } catch (e) { console.error(e); }
   }
 
   window.curtir = async (tweetId) => {
@@ -153,13 +141,11 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (e) { console.error(e); }
   };
 
-  // --- AJUSTE NA FUNÇÃO DE SEGUIR ---
   window.toggleFollow = async (userIdParaSeguir, botao) => {
     const jaSeguindo = botao.classList.contains("following");
     const endpoint = jaSeguindo ? "unfollow" : "follow";
     const metodo = jaSeguindo ? "DELETE" : "POST";
 
-    // Otimismo: muda o visual antes da resposta do servidor para parecer mais rápido
     botao.disabled = true; 
 
     try {
@@ -169,10 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (res.ok) {
-        // Se a API confirmou, recarregamos para atualizar o estado global
         await sincronizarUsuario();
       } else {
-        alert("Não foi possível processar a ação. Tente novamente.");
+        alert("Erro na ação de seguir.");
         botao.disabled = false;
       }
     } catch (e) { 
@@ -188,7 +173,10 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const res = await fetch(`${API_URL}/tweet`, {
           method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            Authorization: `Bearer ${token}` 
+          },
           body: JSON.stringify({ content: texto }),
         });
         if (res.ok) {
@@ -213,8 +201,5 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   aplicarTema(localStorage.getItem("theme") || "dark");
-
-  if (token) {
-    sincronizarUsuario();
-  }
+  if (token) sincronizarUsuario();
 });
