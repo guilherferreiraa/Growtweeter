@@ -14,18 +14,22 @@ export class UserService {
     });
   }
 
-  async findProfile(id: string) {
-    return await prisma.user.findUnique({
-      where: { id },
-      include: {
-        tweets: {
-          orderBy: { createdAt: "desc" },
-        },
-        followers: true,
-        following: true,
+async findProfile(id: string) {
+  return await prisma.user.findUnique({
+    where: { id },
+    include: {
+      tweets: {
+        orderBy: { createdAt: "desc" },
+        include: { 
+          likes: true,
+          _count: { select: { replies: true } } 
+        }
       },
-    });
-  }
+      followers: true, 
+      following: true,
+    },
+  });
+}
 
   async findAll() {
     return await prisma.user.findMany({

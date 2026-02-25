@@ -38,32 +38,48 @@ export class TweetService {
     });
   }
 
-  async findFollowerFeed(userId: string) {
-    const following = await prisma.follow.findMany({
-      where: { followerId: userId },
-      select: { followingId: true }
-    });
-    
-    const followingIds = following.map(f => f.followingId);
+async findFollowerFeed(userId: string) {
+  const follows = await prisma.follow.findMany({
+    where: { followerId: userId },
+    select: { followingId: true }
+  });
 
-    return await prisma.tweet.findMany({
-      where: {
-        userId: { in: [...followingIds, userId] },
-        parentTweetId: null 
-      },
-      include: {
-        user: true,
-        likes: true,
-        _count: { 
-          select: { 
-            likes: true,
-            replies: true 
-          } 
+  const followingIds = follows.map((f: { followingId: string }) => f.followingId);
+  return await prisma.tweet.findMany({
+    where: {
+      OR: [
+        { userId: userId },            
+        { userId: { in: followingIds } } 
+      ],
+    },
+    include: {
+      user: {
+        select: { 
+          id: true, 
+          name: true, 
+          username: true, 
+          avatarUrl: true,
+          followers: true, 
+          following: true,
         }
       },
-      orderBy: { createdAt: 'desc' }
-    });
-  }
+      likes: true,
+      replies: {
+        include: {
+          user: {
+            select: { name: true, username: true, avatarUrl: true }
+          }
+        }
+      },
+      _count: {
+        select: { replies: true }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc' 
+    }
+  });
+}
 
   async toggleLike(tweetId: string, userId: string) {
     const user = await prisma.user.findUnique({ where: { id: userId } });
