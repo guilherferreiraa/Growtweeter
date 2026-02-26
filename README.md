@@ -6,7 +6,7 @@ Bem-vindo ao **GrowX**! Este projeto é uma aplicação de rede social funcional
 
 ## 🔗 Links Importantes
 * **Site no Ar (Deploy):** [COLE_AQUI_O_LINK_DO_SEU_SITE]
-* **Documentação da API:** [![Postman]([https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)]())
+* **Documentação da API:** [![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/48950583/2sBXVmeTuz)
 
 ---
 
@@ -15,20 +15,22 @@ Como o sistema possui rotas protegidas por autenticação, utilize as credenciai
 * **E-mail:** `teste@teste.com`
 * **Senha:** `123`
 
+> **Nota:** Se preferir, você também pode criar uma nova conta do zero através da tela de cadastro para testar o fluxo completo de registro e persistência no banco de dados.
+
 ---
 
 ## ✨ Funcionalidades principais
 
 ### 👤 Experiência do Usuário
-* **Timeline Dinâmica:** Renderização em tempo real de tweets próprios e de seguidos.
-* **Comentários sem distrações:** Sistema de respostas limpo, vinculado ao tweet original via `parentTweetId`.
-* **Sistema de Likes:** Interação visual imediata (coração rosa) com persistência no banco.
+* **Timeline Dinâmica:** Renderização em tempo real de tweets.
+* **Comentários sem distrações:** Sistema de respostas limpo, sem bordas ou fundos desnecessários, com fotos de perfil integradas.
+* **Sistema de Likes:** Interação visual imediata (coração).
 * **Seguir/Parar de Seguir:** Gerenciamento dinâmico de conexões entre usuários.
 * **Dark Mode:** Interface adaptável com troca de tema persistente (salvo no navegador).
 
 ### 🛠️ Backend & API
-* **Arquitetura REST:** Rotas organizadas por recursos (Users, Tweets, Followers, Likes, Reply).
-* **Integração com Banco de Dados:** Persistência real utilizando PostgreSQL e PrismaORM.
+* **Arquitetura REST:** Rotas organizadas por recursos (Users, Tweets, Followers, Likes).
+* **Integração com Banco de Dados:** Estrutura utilizando PostgreSQL e PrismaORM.
 * **Gestão de Estado:** Uso de `localStorage` para manter dados do usuário e temas salvos entre sessões.
 
 ---
