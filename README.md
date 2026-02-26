@@ -5,8 +5,8 @@ Bem-vindo ao **GrowX**! Este projeto é uma aplicação de rede social funcional
 ---
 
 ## 🔗 Links Importantes
-* **Site no Ar (Deploy):** [(https://growtweeter.vercel.app/)]
-* **Documentação da API:** [![Postman](https://documenter.getpostman.com/view/48950583/2sBXVmeTuz)]
+* **Site no Ar (Deploy):** [COLE_AQUI_O_LINK_DO_SEU_SITE]
+* **Documentação da API:** [![Postman]([https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/48950583/2sBXVmeTuz](https://documenter.getpostman.com/view/48950583/2sBXVmeTuz))
 
 ---
 
