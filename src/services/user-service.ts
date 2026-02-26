@@ -2,17 +2,30 @@ import { prisma } from "../database/prisma.database";
 import { UserDTO } from "../dtos/user.dto";
 
 export class UserService {
-  async create(data: UserDTO) {
-    return await prisma.user.create({
-      data: {
-        name: data.name,
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        avatarUrl: data.avatarUrl,
-      },
+async create(data: UserDTO) {
+    // 1. Verifica se o username ou email já estão em uso
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { username: data.username },
+                { email: data.email }
+            ]
+        }
     });
-  }
+
+    if (existingUser) {
+        throw new Error("Já existe uma conta com esses dados.");
+    }
+    return await prisma.user.create({
+        data: {
+            name: data.name,
+            username: data.username,
+            email: data.email,
+            password: data.password,
+            avatarUrl: data.avatarUrl,
+        },
+    });
+}
 
 async findProfile(id: string) {
   return await prisma.user.findUnique({
