@@ -49,6 +49,6 @@ Como o sistema possui rotas protegidas por autenticação, utilize as credenciai
 
 
 <div align="center">
-  <img width="1902" height="913" alt="Tela inicial do GrowX" src="/assets/telaInicial.png" />
+  <img width="1902" height="913" alt="Tela inicial do GrowX" src="/assets/demonstração.png" />
   <p><em>Interface principal com Dark Mode e sistema de comentários limpo.</em></p>
 </div>
