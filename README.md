@@ -5,7 +5,7 @@ Bem-vindo ao **GrowX**! Este projeto é uma aplicação de rede social funcional
 ---
 
 ## 🔗 Links Importantes
-* **Site no Ar (Vercel):** [https://growtweeter.vercel.app/]
+* **Site no Ar (Vercel):** https://growtweeter.vercel.app/
 * **Documentação da API:** [![Postman](https://img.shields.io/badge/Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/48950583/2sBXVmeTuz)
 
 ---
@@ -47,8 +47,7 @@ Como o sistema possui rotas protegidas por autenticação, utilize as credenciai
 
 ## 📸 Demonstração do Projeto
 
- 
 <div align="center">
-  <img width="1902" height="913" alt="Tela inicial do GrowX" src="/assets/demonstração.png" />
-  <p><em>Interface principal com Dark Mode e sistema de comentários limpo.</em></p>
+  <img width="1902" height="913" alt="Demonstração do GrowX" src="/assets/demonstracao-seguidores.png" />
+  <p><em>Interface principal com Dark Mode e sistema de seguidores atualizado.</em></p>
 </div>
