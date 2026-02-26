@@ -48,6 +48,6 @@ Como o sistema possui rotas protegidas por autenticação, utilize as credenciai
 ## 📸 Demonstração do Projeto
 
 <div align="center">
-  <img width="1902" height="913" alt="Demonstração do GrowX" src="/assets/demonstracao-seguidores.png" />
+  <img width="1902" height="913" alt="Demonstração do GrowX" src="/assets/demonstração.png" />
   <p><em>Interface principal com Dark Mode e sistema de seguidores atualizado.</em></p>
 </div>
