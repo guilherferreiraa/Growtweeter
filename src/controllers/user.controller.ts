@@ -12,17 +12,13 @@ export class UserController {
 
       const secret = process.env.JWT_SECRET || "supersecretkey123";
 
-      const token = jwt.sign(
-        { id: user.id }, 
-        secret, 
-        { expiresIn: "1d" }
-      );
+      const token = jwt.sign({ id: user.id }, secret, { expiresIn: "1d" });
 
       return res.status(200).json({
         alert: "Login efetuado com sucesso!",
         message: "Login efetuado com sucesso!",
         token,
-        user: { id: user.id, username: user.username }
+        user: { id: user.id, username: user.username },
       });
     } catch (error: any) {
       return res.status(401).json({ error: error.message });
@@ -34,8 +30,8 @@ export class UserController {
       const { name, username, email, password, avatarUrl } = req.body;
 
       if (!name || !username || !email || !password || !avatarUrl) {
-        return res.status(400).json({ 
-          error: "Nome, username, email, senha e avatarUrl são obrigatórios." 
+        return res.status(400).json({
+          error: "Nome, username, email, senha e avatarUrl são obrigatórios.",
         });
       }
 
@@ -74,14 +70,18 @@ export class UserController {
   async destroy(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const loggedUserId = (req as any).userId; 
+      const loggedUserId = (req as any).userId;
 
       if (id !== loggedUserId) {
-        return res.status(403).json({ error: "Você não tem permissão para excluir esta conta." });
+        return res
+          .status(403)
+          .json({ error: "Você não tem permissão para excluir esta conta." });
       }
 
       await userService.delete(id as string);
-      return res.status(200).json({ message: "Sua conta foi excluída com sucesso!" });
+      return res
+        .status(200)
+        .json({ message: "Sua conta foi excluída com sucesso!" });
     } catch (error: any) {
       return res.status(404).json({ error: error.message });
     }
