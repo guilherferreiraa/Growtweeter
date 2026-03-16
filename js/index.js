@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 
-  // --- RENDERIZAÇÃO DO FEED (SEM BOTÃO DE SEGUIR) ---
   function renderizarFeed() {
     if (!timeline) return;
     timeline.innerHTML = "";

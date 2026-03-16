@@ -10,7 +10,7 @@ export class UserController {
       const { email, password } = req.body;
       const user = await userService.login(email as string, password as string);
 
-      const secret = process.env.JWT_SECRET!;
+      const secret = process.env.JWT_SECRET || "supersecretkey123";
 
       const token = jwt.sign(
         { id: user.id }, 
