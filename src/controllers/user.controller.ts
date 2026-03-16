@@ -19,6 +19,7 @@ export class UserController {
       );
 
       return res.status(200).json({
+        alert: "Login efetuado com sucesso!",
         message: "Login efetuado com sucesso!",
         token,
         user: { id: user.id, username: user.username }

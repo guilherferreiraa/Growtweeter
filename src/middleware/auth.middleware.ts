@@ -17,7 +17,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     return res.status(401).json({ error: "Token mal formatado." });
   }
 
-  const [scheme, token] = parts;
+  const [schema, token] = parts;
 const secret = process.env.JWT_SECRET || "supersecret123";
 
   if (!secret) {
