@@ -126,7 +126,6 @@ async delete(id: string, userId: string) {
   const tweet = await prisma.tweet.findUnique({
     where: { id }
   });
-
   if (!tweet) {
     throw new Error("Tweet não encontrado.");
   }
@@ -134,7 +133,7 @@ async delete(id: string, userId: string) {
     throw new Error("Você não tem permissão para excluir este tweet.");
   }
   return await prisma.tweet.delete({
-    where: { id },
+    where: { id }
   });
 }
 }
