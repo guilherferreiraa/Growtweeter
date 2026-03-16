@@ -122,9 +122,19 @@ async findFollowerFeed(userId: string) {
     return { message: "Curtida removida." };
   }
 
-  async delete(id: string) {
-    return await prisma.tweet.delete({
-      where: { id },
-    });
+async delete(id: string, userId: string) {
+  const tweet = await prisma.tweet.findUnique({
+    where: { id }
+  });
+
+  if (!tweet) {
+    throw new Error("Tweet não encontrado.");
   }
+  if (tweet.userId !== userId) {
+    throw new Error("Você não tem permissão para excluir este tweet.");
+  }
+  return await prisma.tweet.delete({
+    where: { id },
+  });
+}
 }

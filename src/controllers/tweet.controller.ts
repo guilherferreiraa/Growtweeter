@@ -55,15 +55,18 @@ export class TweetController {
       return res.status(400).json({ error: error.message });
     }
   }
-  async destroy(req: Request, res: Response) {
-    try {
-      const id = String(req.params.id);
-      await tweetService.delete(id);
-      return res.status(200).json({ message: "Removido!" });
-    } catch (error: any) {
-      return res.status(400).json({ error: "Erro ao deletar" });
-    }
+async destroy(req: Request, res: Response) {
+  try {
+    const id = String(req.params.id);
+    const userId = (req as any).userId;
+    await tweetService.delete(id, userId); 
+    
+    return res.status(200).json({ message: "Tweet removido com sucesso!" });
+  } catch (error: any) {
+    const statusCode = error.message === "Você não tem permissão para excluir este tweet." ? 403 : 400;
+    return res.status(statusCode).json({ error: error.message });
   }
+}
 
   async reply(req: Request, res: Response) {
     try {
